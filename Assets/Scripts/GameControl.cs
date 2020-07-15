@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class GameControl : MonoBehaviour
 {
@@ -11,13 +12,16 @@ public class GameControl : MonoBehaviour
     public GameObject[] upSpikes;
     public GameObject[] downSpikes;
     public GameObject player;
-    public Player playerScript;
+    private Player playerScript;
     int numOfSpikes;
     Text scoreText;
-    
+    [SerializeField] private Canvas PauseCanvas;
+    [SerializeField] private GameObject blur;
+
 
     private void Start()
     {
+        
         scoreText = GameObject.Find("Score").GetComponent<Text>();
         playerScript = player.GetComponent<Player>();
         score = 0;
@@ -30,6 +34,8 @@ public class GameControl : MonoBehaviour
         {
             spike.SetActive(false);
         }
+        PauseCanvas.gameObject.SetActive(false);
+        blur.SetActive(false);
     }
 
     public IEnumerator Restart()
@@ -89,5 +95,27 @@ public class GameControl : MonoBehaviour
         scoreText.text = score.ToString();
         if (score % 3 == 0 && numOfSpikes < 17) numOfSpikes += 1;
         if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
+    }
+    
+    // Pause
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        blur.SetActive(true);
+        PauseCanvas.gameObject.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        blur.SetActive(false);
+
+        Time.timeScale = 1;
+        PauseCanvas.gameObject.SetActive(false);
+    }
+
+    public void Exit()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Menu");
     }
 }

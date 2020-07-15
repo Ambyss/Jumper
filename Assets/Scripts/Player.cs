@@ -17,10 +17,9 @@ public class Player : MonoBehaviour
     {
         up = true;
         force = 400;
+        GC = GameObject.Find("UpSpikes").GetComponent<GameControl>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         rb.AddForce(new Vector2(0, force));
-        GC = GameObject.Find("UpSpikes").GetComponent<GameControl>();
-        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -46,6 +45,8 @@ public class Player : MonoBehaviour
         }
     }
 
+    
+    
     void Death()
     {
         Destroy(gameObject);
@@ -60,13 +61,24 @@ public class Player : MonoBehaviour
 
     public void MoveRight()
     {
-        Debug.Log("Gi");
-        transform.position += new Vector3(0.1f, 0);
+        move = 1;
+
+    }
+    
+    public void MoveLeft()
+    {
+        move = -1;
+
+    }
+
+    public void StopMove()
+    {
+        move = 0;
+
     }
     
     private void FixedUpdate()
     {
-        move = Input.GetAxis("Horizontal");
         transform.position += new Vector3(0.1f * move, 0);
     }
 }
